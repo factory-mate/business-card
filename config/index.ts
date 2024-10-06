@@ -1,4 +1,7 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
+import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
+import { Plugin } from 'vite'
+import tailwindcss from 'tailwindcss'
 import devConfig from './dev'
 import prodConfig from './prod'
 
@@ -23,7 +26,30 @@ export default defineConfig<'vite'>(async (merge, {}) => {
       options: {}
     },
     framework: 'react',
-    compiler: 'vite',
+    compiler: {
+      type: 'vite',
+      vitePlugins: [
+        {
+          // 通过 vite 插件加载 postcss,
+          name: 'postcss-config-loader-plugin',
+          config(config) {
+            // 加载 tailwindcss
+            if (typeof config.css?.postcss === 'object') {
+              config.css?.postcss.plugins?.unshift(tailwindcss())
+            }
+          }
+        },
+        uvtw({
+          // rem转rpx
+          rem2rpx: true,
+          // 除了小程序这些，其他平台都 disable
+          disabled:
+            process.env.TARO_ENV === 'h5' ||
+            process.env.TARO_ENV === 'harmony' ||
+            process.env.TARO_ENV === 'rn'
+        })
+      ] as Plugin[]
+    },
     mini: {
       postcss: {
         pxtransform: {
