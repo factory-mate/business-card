@@ -35,7 +35,7 @@
   ],
   "author": "",
   "dependencies": {
-    "@babel/runtime": "^7.24.4",
+    "@babel/runtime": "^7.25.7",
     "@bit-ocean/cspell": "^0.0.48",
     "@tarojs/components": "4.0.6",
     "@tarojs/components-advanced": "^4.0.6",

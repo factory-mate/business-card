@@ -1,5 +1,4 @@
 import { View } from '@tarojs/components'
-import { VirtualList } from '@tarojs/components-advanced'
 import { memo, useState } from 'react'
 import { AtTabs, AtTabsPane } from 'taro-ui'
 
@@ -18,6 +17,11 @@ function buildData(offset = 0) {
     .fill(0)
     .map((_, i) => i + offset)
 }
+
+definePageConfig({
+  navigationBarTitleText: '名片夹',
+  enableShareAppMessage: true
+})
 
 export default function Index() {
   const [current, setCurrent] = useState(0)
@@ -52,14 +56,6 @@ export default function Index() {
           </AtTabsPane>
         ))}
       </AtTabs>
-      <VirtualList
-        height={800}
-        width="100%"
-        item={Row}
-        itemData={data}
-        itemCount={data.length}
-        itemSize={100}
-      />
     </View>
   )
 }

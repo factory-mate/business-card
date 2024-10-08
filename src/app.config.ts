@@ -26,6 +26,7 @@ export default defineAppConfig({
         iconPath: 'assets/tabbar/my.png',
         selectedIconPath: 'assets/tabbar/my.png'
       }
-    ]
+    ],
+    selectedColor: '#0078d7'
   }
 })

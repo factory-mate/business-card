@@ -8,5 +8,6 @@ export default function App({ children }: PropsWithChildren) {
   useLaunch(() => {
     console.log('App launched.')
   })
+
   return children
 }
