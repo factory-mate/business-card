@@ -7,8 +7,8 @@ definePageConfig({
 
 export default function Index() {
   return (
-    <View>
-      <Text />
+    <View className="text-center">
+      <Text className="mt-4">暂未开放</Text>
     </View>
   )
 }

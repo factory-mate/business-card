@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface CardInfo {
   name: string
   department: string
   title: string

@@ -1,8 +1,9 @@
-import { Text, View } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { useShareAppMessage } from '@tarojs/taro'
-import { AtButton, AtDivider } from 'taro-ui'
+import { AtButton } from 'taro-ui'
 
-import { Card } from './components'
+import { BasicCard, CompanyInfo } from '@/components'
+import { appConfig } from '@/config'
 
 definePageConfig({
   navigationBarTitleText: '首页',
@@ -11,11 +12,11 @@ definePageConfig({
 
 export default function Index() {
   useShareAppMessage(() => ({
-    title: '慧友天工',
-    path: '/pages/index/index'
+    title: appConfig.name,
+    path: '/pages/share/index'
   }))
 
-  const userInfo = {
+  const cardInfo = {
     name: 'Bruce',
     department: 'xxx 部门',
     title: 'xxx 职位',
@@ -29,8 +30,11 @@ export default function Index() {
   }
 
   return (
-    <View className="w-auto p-2">
-      <Card userInfo={userInfo} />
+    <View className="p-2">
+      <BasicCard
+        cardInfo={cardInfo}
+        editable
+      />
 
       <AtButton
         className="!mt-2"
@@ -40,23 +44,7 @@ export default function Index() {
         分享我的名片
       </AtButton>
 
-      <AtDivider
-        className="mt-2"
-        content="公司介绍"
-      />
-      <Text>{userInfo.description}</Text>
-
-      <AtDivider
-        className="mt-2"
-        content="业务介绍"
-      />
-      <Text>{userInfo.description}</Text>
-
-      <AtDivider
-        className="mt-2"
-        content="行业案例"
-      />
-      <Text>{userInfo.description}</Text>
+      <CompanyInfo cardInfo={cardInfo} />
     </View>
   )
 }

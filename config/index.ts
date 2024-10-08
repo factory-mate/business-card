@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
 import tailwindcss from 'tailwindcss'
 import type { Plugin } from 'vite'
@@ -9,7 +11,7 @@ import prodConfig from './prod'
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig<'vite'>(async (merge) => {
   const baseConfig: UserConfigExport<'vite'> = {
-    projectName: '慧友天工',
+    projectName: '慧友天工云',
     date: '2024-10-5',
     designWidth: 750,
     deviceRatio: {
@@ -27,6 +29,11 @@ export default defineConfig<'vite'>(async (merge) => {
       options: {}
     },
     framework: 'react',
+    alias: {
+      '@/components': path.resolve(__dirname, '..', 'src/components'),
+      '@/config': path.resolve(__dirname, '..', 'src/config'),
+      '@/types': path.resolve(__dirname, '..', 'src/types')
+    },
     compiler: {
       type: 'vite',
       // prebundle: {

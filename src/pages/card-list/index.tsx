@@ -1,22 +1,6 @@
 import { View } from '@tarojs/components'
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { AtTabs, AtTabsPane } from 'taro-ui'
-
-const Row = memo(({ id, data, index }: { id: string; data: any[]; index: number }) => (
-  <View
-    id={id}
-    className={index % 2 ? 'ListItemOdd' : 'ListItemEven'}
-  >
-    Row {index} : {data[index]}
-  </View>
-))
-Row.displayName = 'Row'
-
-function buildData(offset = 0) {
-  return Array(100)
-    .fill(0)
-    .map((_, i) => i + offset)
-}
 
 definePageConfig({
   navigationBarTitleText: '名片夹',
@@ -37,8 +21,6 @@ export default function Index() {
     }
   ]
 
-  const [data, setData] = useState(buildData(0))
-
   return (
     <View>
       <AtTabs
@@ -52,7 +34,7 @@ export default function Index() {
             current={current}
             index={index}
           >
-            <View>123</View>
+            <View className="mt-2 text-center">暂未开放</View>
           </AtTabsPane>
         ))}
       </AtTabs>
