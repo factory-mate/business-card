@@ -1,12 +1,13 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
-import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
-import { Plugin } from 'vite'
 import tailwindcss from 'tailwindcss'
+import type { Plugin } from 'vite'
+import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite'
+
 import devConfig from './dev'
 import prodConfig from './prod'
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
-export default defineConfig<'vite'>(async (merge, {}) => {
+export default defineConfig<'vite'>(async (merge) => {
   const baseConfig: UserConfigExport<'vite'> = {
     projectName: 'business-card',
     date: '2024-10-5',
@@ -28,6 +29,10 @@ export default defineConfig<'vite'>(async (merge, {}) => {
     framework: 'react',
     compiler: {
       type: 'vite',
+      // prebundle: {
+      //   enable: false,
+      //   include: ['@taro/components']
+      // },
       vitePlugins: [
         {
           // 通过 vite 插件加载 postcss,
@@ -39,7 +44,7 @@ export default defineConfig<'vite'>(async (merge, {}) => {
             }
           }
         },
-        uvtw({
+        UnifiedViteWeappTailwindcssPlugin({
           // rem转rpx
           rem2rpx: true,
           // 除了小程序这些，其他平台都 disable
@@ -68,7 +73,6 @@ export default defineConfig<'vite'>(async (merge, {}) => {
     h5: {
       publicPath: '/',
       staticDirectory: 'static',
-
       miniCssExtractPluginOption: {
         ignoreOrder: true,
         filename: 'css/[name].[hash].css',
@@ -86,7 +90,8 @@ export default defineConfig<'vite'>(async (merge, {}) => {
             generateScopedName: '[name]__[local]___[hash:base64:5]'
           }
         }
-      }
+      },
+      esnextModules: ['taro-ui']
     },
     rn: {
       appName: 'taroDemo',

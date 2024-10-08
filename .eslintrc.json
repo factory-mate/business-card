@@ -1,0 +1,6 @@
+{
+  "extends": ["taro/react", "@bit-ocean"],
+  "rules": {
+    "import/first": "off"
+  }
+}
