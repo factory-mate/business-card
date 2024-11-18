@@ -1,7 +1,9 @@
 import { View } from '@tarojs/components'
-import { useShareAppMessage } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
+import { useRef, useState } from 'react'
 import { AtButton } from 'taro-ui'
 
+import { AuthAPI, UsersAPI, type UserVo } from '@/api'
 import { BasicCard, CompanyInfo } from '@/components'
 import { appConfig } from '@/config'
 
@@ -11,28 +13,71 @@ definePageConfig({
 })
 
 export default function Index() {
-  useShareAppMessage(() => ({
+  const [isLogin, setIsLogin] = useState(false)
+  const isAddLoading = useRef(false)
+  const [userDetail, setUserDetail] = useState<UserVo>({})
+
+  Taro.useDidShow(async () => {
+    const token = Taro.getStorageSync('token')
+    setIsLogin(!!token)
+    if (token) {
+      await fetchUserInfo()
+    }
+  })
+
+  Taro.useShareAppMessage(() => ({
     title: appConfig.name,
     path: '/pages/share/index'
   }))
 
-  const cardInfo = {
-    name: 'Bruce',
-    department: 'xxx 部门',
-    title: 'xxx 职位',
-    company: 'xxx 公司',
-    address: 'xxx 地址',
-    phone: 'xxx 电话',
-    email: 'xxx 邮箱',
-    wechat: 'xxx 微信',
-    website: 'xxx 网站',
-    description: 'xxx 公司描述'
+  async function handleAdd() {
+    if (isAddLoading.current) {
+      return
+    }
+    Taro.showLoading({ title: '加载中...' })
+    isAddLoading.current = true
+    try {
+      const { code } = await Taro.login()
+      const { data } = await AuthAPI.login({ js_code: code })
+      Taro.setStorageSync('token', data.token)
+      Taro.setStorageSync('user', data.token_user)
+      setIsLogin(true)
+      await fetchUserInfo()
+    } catch {
+      //
+    }
+    Taro.hideLoading()
+    isAddLoading.current = false
+  }
+
+  async function fetchUserInfo() {
+    const userId = Taro.getStorageSync('user').UserId
+    try {
+      const { data } = await UsersAPI.getById(userId)
+      setUserDetail(data)
+    } catch {
+      setUserDetail({})
+    }
+  }
+
+  if (!isLogin) {
+    return (
+      <View className="flex h-screen flex-col items-center justify-center space-y-8">
+        <View>创建名片需要您的授权</View>
+        <AtButton
+          type="primary"
+          onClick={() => handleAdd()}
+        >
+          授权并创建名片
+        </AtButton>
+      </View>
+    )
   }
 
   return (
     <View className="p-2">
       <BasicCard
-        cardInfo={cardInfo}
+        data={userDetail}
         editable
       />
 
@@ -44,7 +89,7 @@ export default function Index() {
         分享我的名片
       </AtButton>
 
-      <CompanyInfo cardInfo={cardInfo} />
+      <CompanyInfo data={userDetail} />
     </View>
   )
 }

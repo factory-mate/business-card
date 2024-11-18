@@ -30,6 +30,7 @@ export default defineConfig<'vite'>(async (merge) => {
     },
     framework: 'react',
     alias: {
+      '@/api': path.resolve(__dirname, '..', 'src/api'),
       '@/components': path.resolve(__dirname, '..', 'src/components'),
       '@/config': path.resolve(__dirname, '..', 'src/config'),
       '@/types': path.resolve(__dirname, '..', 'src/types')

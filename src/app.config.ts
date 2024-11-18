@@ -1,5 +1,12 @@
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/card-list/index', 'pages/my/index', 'pages/share/index'],
+  pages: [
+    'pages/index/index',
+    'pages/edit/index',
+    'pages/card-list/index',
+    'pages/my/index',
+    'pages/share/index',
+    'pages/privacy-policy/index'
+  ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

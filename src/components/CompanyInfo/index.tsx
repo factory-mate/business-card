@@ -1,33 +1,45 @@
 import { Text, View } from '@tarojs/components'
 import { AtDivider } from 'taro-ui'
 
-import type { CardInfo } from '@/types'
+import type { UserVo } from '@/api'
 
 interface CompanyInfoProps {
-  cardInfo: CardInfo
+  data: UserVo
 }
 
 export default function CompanyInfo(props: CompanyInfoProps) {
-  const { cardInfo } = props
+  const { data } = props
   return (
     <View>
-      <AtDivider
-        className="mt-2"
-        content="公司介绍"
-      />
-      <Text>{cardInfo.description}</Text>
+      {data.cCompanyIntroduce && (
+        <>
+          <AtDivider
+            className="mt-2"
+            content="公司介绍"
+          />
+          <Text>{data.cCompanyIntroduce}</Text>
+        </>
+      )}
 
-      <AtDivider
-        className="mt-2"
-        content="业务介绍"
-      />
-      <Text>{cardInfo.description}</Text>
+      {data.cCompanyIntroduce && (
+        <>
+          <AtDivider
+            className="mt-2"
+            content="业务介绍"
+          />
+          <Text>{data.cCompanyIntroduce}</Text>
+        </>
+      )}
 
-      <AtDivider
-        className="mt-2"
-        content="行业案例"
-      />
-      <Text>{cardInfo.description}</Text>
+      {data.cCompanyIntroduce && (
+        <>
+          <AtDivider
+            className="mt-2"
+            content="行业案例"
+          />
+          <Text>{data.cCompanyIntroduce}</Text>
+        </>
+      )}
     </View>
   )
 }

@@ -5,9 +5,7 @@ import { useLaunch } from '@tarojs/taro'
 import type { PropsWithChildren } from 'react'
 
 export default function App({ children }: PropsWithChildren) {
-  useLaunch(() => {
-    console.log('App launched.')
-  })
+  useLaunch(() => {})
 
   return children
 }
