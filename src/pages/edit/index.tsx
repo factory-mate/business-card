@@ -32,7 +32,7 @@ export default function Index() {
   async function fetchUserInfo() {
     const userId = Taro.getStorageSync('user').UserId
     try {
-      const { data } = await UsersAPI.getById(userId)
+      const { data } = await UsersAPI.getAllInfo(userId)
       setFormValue(data)
     } catch {
       setFormValue({})
@@ -228,7 +228,7 @@ export default function Index() {
           placeholder="请输入"
         />
 
-        <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">业务介绍</View>
+        {/* <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">业务介绍</View> */}
 
         <View className="flex items-center">
           <Checkbox

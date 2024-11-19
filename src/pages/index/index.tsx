@@ -53,7 +53,7 @@ export default function Index() {
   async function fetchUserInfo() {
     const userId = Taro.getStorageSync('user').UserId
     try {
-      const { data } = await UsersAPI.getById(userId)
+      const { data } = await UsersAPI.getAllInfo(userId)
       setUserDetail(data)
     } catch {
       setUserDetail({})
