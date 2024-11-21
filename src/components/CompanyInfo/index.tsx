@@ -21,7 +21,7 @@ export default function CompanyInfo(props: CompanyInfoProps) {
         </>
       )}
 
-      {data.cCompanyIntroduce && (
+      {data.cCompanyIntroduce && false && (
         <>
           <AtDivider
             className="mt-2"
@@ -31,7 +31,7 @@ export default function CompanyInfo(props: CompanyInfoProps) {
         </>
       )}
 
-      {data.cCompanyIntroduce && (
+      {data.cCompanyIntroduce && false && (
         <>
           <AtDivider
             className="mt-2"

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 
-const API_DOMAIN_PREFIX = 'http://www.huiyoucloud.com:8089'
+export const API_DOMAIN_PREFIX = 'https://www.huiyoucloud.com'
 
 export const request = <T = any>(options: RequestOptions): Promise<Response<T>> =>
   new Promise((resolve, reject) => {
@@ -18,23 +18,23 @@ export const request = <T = any>(options: RequestOptions): Promise<Response<T>> 
         const { msg, errmsg } = data
         const errorMessage = msg || errmsg?.[0]?.msg || errmsg?.[0]?.Value || errmsg || '请求错误'
         if (statusCode === 401 || statusCode === 403) {
-          Taro.showToast({ title: errorMessage, icon: 'error' })
+          Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
           Taro.removeStorageSync('token')
           Taro.removeStorageSync('user')
           Taro.redirectTo({ url: '/pages/login/index' })
         } else if (statusCode !== 200) {
-          Taro.showToast({ title: errorMessage, icon: 'error' })
+          Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
           reject(data)
         } else {
           if (!data.success) {
-            Taro.showToast({ title: errorMessage, icon: 'error' })
+            Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
             reject(data)
           }
           resolve(data)
         }
       },
       fail: (err) => {
-        Taro.showToast({ title: err.errMsg ?? '请求错误', icon: 'error' })
+        Taro.showToast({ title: err.errMsg ?? '请求错误', icon: 'error', duration: 2000 })
         reject(err)
       }
     })

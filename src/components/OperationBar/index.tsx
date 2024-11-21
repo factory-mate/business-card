@@ -3,59 +3,68 @@ import { addPhoneContact, makePhoneCall, useShareAppMessage } from '@tarojs/taro
 import { useState } from 'react'
 import { AtModal, AtModalContent, AtModalHeader } from 'taro-ui'
 
+import type { UserVo } from '@/api'
 import { appConfig } from '@/config'
 
-import qrcode from '../../assets/sample/qrcode.jpg'
+interface OperationBarProps {
+  data: UserVo
+}
 
-export default function OperationBar() {
+export default function OperationBar(props: OperationBarProps) {
+  const { data } = props
+
   useShareAppMessage(() => ({
     title: appConfig.name,
-    path: '/pages/share/index'
+    path: `/pages/share/index?id=${data.UID}`
   }))
 
   const [open, setOpen] = useState(false)
 
-  const handleMakePhoneCall = () => makePhoneCall({ phoneNumber: '10086' })
+  const handleMakePhoneCall = () => makePhoneCall({ phoneNumber: data.cPhone! })
 
   const handleAddWechat = () => setOpen(true)
 
   const handleAddPhoneContact = () =>
     addPhoneContact({
       photoFilePath: '',
-      firstName: '张三',
-      title: '开发',
-      organization: '慧友科技股份有限公司',
-      email: 'recall4056@gmail.com',
-      mobilePhoneNumber: '10086',
-      url: 'https://baidu.com',
-      weChatNumber: 'Recall4056'
+      firstName: data.cUserName ?? '',
+      title: data.cPost,
+      organization: data.cCompany,
+      email: data.cEmail,
+      mobilePhoneNumber: data.cPhone,
+      url: data.cUrl,
+      weChatNumber: data.cWetName
     })
 
   return (
     <View className="mt-2 flex items-center justify-between rounded-md border p-2 shadow-xl">
+      {data.cPhone && (
+        <View>
+          <Button
+            style={{ border: 'none', fontSize: '12px' }}
+            plain
+            hoverClass="none"
+            onClick={handleMakePhoneCall}
+          >
+            拨打电话
+          </Button>
+        </View>
+      )}
+      {data.BarCodeInfo?.UID && (
+        <View>
+          <Button
+            style={{ border: 'none', fontSize: '12px' }}
+            plain
+            hoverClass="none"
+            onClick={handleAddWechat}
+          >
+            添加微信
+          </Button>
+        </View>
+      )}
       <View>
         <Button
-          style={{ border: 'none', fontSize: '14px' }}
-          plain
-          hoverClass="none"
-          onClick={handleMakePhoneCall}
-        >
-          拨打电话
-        </Button>
-      </View>
-      <View>
-        <Button
-          style={{ border: 'none', fontSize: '14px' }}
-          plain
-          hoverClass="none"
-          onClick={handleAddWechat}
-        >
-          添加微信
-        </Button>
-      </View>
-      <View>
-        <Button
-          style={{ border: 'none', fontSize: '14px' }}
+          style={{ border: 'none', fontSize: '12px' }}
           openType="share"
           plain
           hoverClass="none"
@@ -65,7 +74,7 @@ export default function OperationBar() {
       </View>
       <View>
         <Button
-          style={{ border: 'none', fontSize: '14px' }}
+          style={{ border: 'none', fontSize: '12px' }}
           plain
           hoverClass="none"
           onClick={handleAddPhoneContact}
@@ -83,7 +92,7 @@ export default function OperationBar() {
           <View className="flex flex-col items-center">
             <Text>加我好友，了解更多服务</Text>
             <Image
-              src={qrcode}
+              src={`${data.BarCodeInfo?.cFilePath}${data.BarCodeInfo?.cFileReName}${data.BarCodeInfo?.cFileSuffix}`}
               mode="aspectFit"
               showMenuByLongpress
             />

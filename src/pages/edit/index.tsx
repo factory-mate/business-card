@@ -1,9 +1,10 @@
 import { Checkbox, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
-import { AtButton, AtForm, AtInput, AtTextarea } from 'taro-ui'
+import { AtButton, AtForm, AtImagePicker, AtInput, AtTextarea } from 'taro-ui'
+import type { AtImagePickerProps } from 'taro-ui/types/image-picker'
 
-import { UsersAPI, type UserVo } from '@/api'
+import { FilesAPI, FileType, UsersAPI, type UserVo } from '@/api'
 
 definePageConfig({
   navigationBarTitleText: '编辑名片',
@@ -23,9 +24,10 @@ export default function Index() {
     cAddress: '',
     cCompanyIntroduce: ''
   })
+  const [wechatQrCodeFiles, setWechatQrCodeFiles] = useState<AtImagePickerProps['files']>([])
   const [privacyChecked, setPrivacyChecked] = useState(false)
 
-  Taro.useDidShow(async () => {
+  Taro.useLoad(async () => {
     await fetchUserInfo()
   })
 
@@ -34,6 +36,15 @@ export default function Index() {
     try {
       const { data } = await UsersAPI.getAllInfo(userId)
       setFormValue(data)
+      setWechatQrCodeFiles(
+        data.BarCodeInfo?.UID
+          ? [
+              {
+                url: `${data.BarCodeInfo.cFilePath}${data.BarCodeInfo.cFileReName}${data.BarCodeInfo.cFileSuffix}`
+              }
+            ]
+          : []
+      )
     } catch {
       setFormValue({})
     }
@@ -68,8 +79,16 @@ export default function Index() {
       })
       return
     }
+    const data = { ...formValue }
     try {
-      await UsersAPI.edit(formValue)
+      if (wechatQrCodeFiles.length > 0) {
+        const { UID } = await FilesAPI.upload({
+          file: wechatQrCodeFiles[0],
+          fileType: FileType.QRCODE
+        })
+        data.cWetBarCodeUID = UID
+      }
+      await UsersAPI.edit(data)
       Taro.showToast({
         title: '保存成功',
         icon: 'success'
@@ -142,6 +161,15 @@ export default function Index() {
           }
         />
 
+        <View className="px-4 py-2">微信二维码</View>
+        <AtImagePicker
+          className="px-1"
+          files={wechatQrCodeFiles}
+          multiple={false}
+          showAddBtn={wechatQrCodeFiles.length === 0}
+          onChange={(files) => setWechatQrCodeFiles(files)}
+        />
+
         <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">企业信息</View>
 
         <AtInput
@@ -171,7 +199,6 @@ export default function Index() {
             })
           }
         />
-
         <AtInput
           name="cPost"
           title="职位"
@@ -185,7 +212,6 @@ export default function Index() {
             })
           }
         />
-
         <AtInput
           name="cUrl"
           title="企业官网"
@@ -199,7 +225,6 @@ export default function Index() {
             })
           }
         />
-
         <AtInput
           name="cAddress"
           title="地址"

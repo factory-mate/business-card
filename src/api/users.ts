@@ -3,6 +3,7 @@ import { request } from './request'
 const API_PREFIX = '/api/sys_User'
 
 export interface UserVo {
+  UID?: string
   cUserCode?: string
   cUserName?: string
   cPost?: string
@@ -17,6 +18,15 @@ export interface UserVo {
   cWetBarCodeUID?: string
   list_IntroduceUID?: string[]
   list_ProjectUID?: string[]
+  BarCodeInfo?: BarCodeInfo
+}
+
+interface BarCodeInfo {
+  UID?: string
+  cFilePath?: string
+  cFileReName?: string
+  cFileName?: string
+  cFileSuffix?: string
 }
 
 export const UsersAPI = {

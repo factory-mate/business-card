@@ -31,7 +31,7 @@ export default function BasicCard(props: BasicCardProps) {
       <View className="flex items-center space-x-4">
         <View>
           <Image
-            src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.cUserName}`}
+            src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.cUserName ?? '用户'}`}
             className="size-24 rounded-full"
           />
         </View>

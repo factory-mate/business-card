@@ -1,5 +1,8 @@
 import { View } from '@tarojs/components'
+import Taro from '@tarojs/taro'
+import { useState } from 'react'
 
+import { UsersAPI, type UserVo } from '@/api'
 import { BasicCard, CompanyInfo, OperationBar } from '@/components'
 
 definePageConfig({
@@ -8,24 +11,30 @@ definePageConfig({
 })
 
 export default function Index() {
-  const cardInfo = {
-    name: 'Bruce',
-    department: 'xxx 部门',
-    title: 'xxx 职位',
-    company: 'xxx 公司',
-    address: 'xxx 地址',
-    phone: 'xxx 电话',
-    email: 'xxx 邮箱',
-    wechat: 'xxx 微信',
-    website: 'xxx 网站',
-    description: 'xxx 公司描述'
+  const [userDetail, setUserDetail] = useState<UserVo>({})
+
+  Taro.useLoad(async () => {
+    await fetchUserInfo()
+  })
+
+  async function fetchUserInfo() {
+    const userId = Taro.getCurrentInstance().router?.params.id
+    try {
+      const { data } = await UsersAPI.getAllInfo(userId!)
+      setUserDetail(data)
+    } catch {
+      setUserDetail({})
+    }
   }
 
   return (
     <View className="p-2">
-      <BasicCard cardInfo={cardInfo} />
-      <OperationBar />
-      <CompanyInfo cardInfo={cardInfo} />
+      <BasicCard
+        data={userDetail}
+        editable={false}
+      />
+      <OperationBar data={userDetail} />
+      <CompanyInfo data={userDetail} />
     </View>
   )
 }

@@ -11,7 +11,7 @@
         {
           "name": "pages/share/index",
           "pathName": "pages/share/index",
-          "query": "",
+          "query": "id=8f08c831-bf70-4f0c-a139-d6126f7d7a4c",
           "launchMode": "default",
           "scene": null
         }

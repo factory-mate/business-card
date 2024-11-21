@@ -27,7 +27,7 @@ export default function Index() {
 
   Taro.useShareAppMessage(() => ({
     title: appConfig.name,
-    path: '/pages/share/index'
+    path: `/pages/share/index?id=${Taro.getStorageSync('user').UserId}`
   }))
 
   async function handleAdd() {

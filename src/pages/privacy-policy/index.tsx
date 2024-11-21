@@ -8,7 +8,6 @@ definePageConfig({
 export default function Index() {
   return (
     <View className="space-y-2 p-2">
-      <View className="text-center">隐私协议</View>
       <View className="text-sm">
         <View className="mb-1">一、收集你的微信昵称、头像</View>
         <View className="text-xs">

@@ -11,7 +11,7 @@ definePageConfig({
 export default function Index() {
   const [isLogin, setIsLogin] = useState(false)
 
-  Taro.useDidShow(() => {
+  Taro.useLoad(() => {
     const token = Taro.getStorageSync('token')
     setIsLogin(!!token)
   })
