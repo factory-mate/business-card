@@ -17,6 +17,11 @@ export default function Index() {
   const isAddLoading = useRef(false)
   const [userDetail, setUserDetail] = useState<UserVo>({})
 
+  Taro.useShareAppMessage(() => ({
+    title: appConfig.name,
+    path: `/pages/share/index?id=${Taro.getStorageSync('user').UserId}`
+  }))
+
   Taro.useDidShow(async () => {
     const token = Taro.getStorageSync('token')
     setIsLogin(!!token)
@@ -24,11 +29,6 @@ export default function Index() {
       await fetchUserInfo()
     }
   })
-
-  Taro.useShareAppMessage(() => ({
-    title: appConfig.name,
-    path: `/pages/share/index?id=${Taro.getStorageSync('user').UserId}`
-  }))
 
   async function handleAdd() {
     if (isAddLoading.current) {
