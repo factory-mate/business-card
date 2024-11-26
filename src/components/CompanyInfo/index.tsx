@@ -1,4 +1,4 @@
-import { Text, View } from '@tarojs/components'
+import { Image, Text, View } from '@tarojs/components'
 import { AtDivider } from 'taro-ui'
 
 import type { UserVo } from '@/api'
@@ -21,23 +21,45 @@ export default function CompanyInfo(props: CompanyInfoProps) {
         </>
       )}
 
-      {data.cCompanyIntroduce && false && (
+      {data.list_IntroduceInfo && data.list_IntroduceInfo.length > 0 && (
         <>
           <AtDivider
             className="mt-2"
             content="业务介绍"
           />
-          <Text>{data.cCompanyIntroduce}</Text>
+          {data.list_IntroduceInfo.map((item) => (
+            <View
+              key={item.UID}
+              className="mt-1"
+            >
+              <Image
+                src={`${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`}
+                className="w-full"
+                mode="aspectFill"
+              />
+            </View>
+          ))}
         </>
       )}
 
-      {data.cCompanyIntroduce && false && (
+      {data.list_ProjectInfo && data.list_ProjectInfo.length > 0 && (
         <>
           <AtDivider
             className="mt-2"
             content="行业案例"
           />
-          <Text>{data.cCompanyIntroduce}</Text>
+          {data.list_ProjectInfo.map((item) => (
+            <View
+              key={item.UID}
+              className="mt-1"
+            >
+              <Image
+                src={`${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`}
+                className="w-full"
+                mode="aspectFill"
+              />
+            </View>
+          ))}
         </>
       )}
     </View>

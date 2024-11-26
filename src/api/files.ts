@@ -29,7 +29,8 @@ export const FilesAPI = {
 export enum FileType {
   QRCODE = '1',
   INTRODUCTION = '2',
-  PRODUCTION = '3'
+  PRODUCTION = '3',
+  AVATAR = '4'
 }
 
 interface UploadFileDto {

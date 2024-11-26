@@ -50,18 +50,20 @@ export default function OperationBar(props: OperationBarProps) {
           </Button>
         </View>
       )}
-      {data.BarCodeInfo?.UID && (
-        <View>
-          <Button
-            style={{ border: 'none', fontSize: '12px' }}
-            plain
-            hoverClass="none"
-            onClick={handleAddWechat}
-          >
-            添加微信
-          </Button>
-        </View>
-      )}
+      {data.BarCodeInfo?.cFilePath &&
+        data.BarCodeInfo?.cFileReName &&
+        data.BarCodeInfo?.cFileSuffix && (
+          <View>
+            <Button
+              style={{ border: 'none', fontSize: '12px' }}
+              plain
+              hoverClass="none"
+              onClick={handleAddWechat}
+            >
+              添加微信
+            </Button>
+          </View>
+        )}
       <View>
         <Button
           style={{ border: 'none', fontSize: '12px' }}

@@ -24,7 +24,10 @@ export default function Index() {
     cAddress: '',
     cCompanyIntroduce: ''
   })
+  const [avatarFiles, setAvatarFiles] = useState<AtImagePickerProps['files']>([])
   const [wechatQrCodeFiles, setWechatQrCodeFiles] = useState<AtImagePickerProps['files']>([])
+  const [listIntroduceFiles, setListIntroduceFiles] = useState<AtImagePickerProps['files']>([])
+  const [listProjectFiles, setListProjectFiles] = useState<AtImagePickerProps['files']>([])
   const [privacyChecked, setPrivacyChecked] = useState(false)
 
   Taro.useLoad(async () => {
@@ -36,6 +39,15 @@ export default function Index() {
     try {
       const { data } = await UsersAPI.getAllInfo(userId)
       setFormValue(data)
+      setAvatarFiles(
+        data.PicInfo?.UID
+          ? [
+              {
+                url: `${data.PicInfo.cFilePath}${data.PicInfo.cFileReName}${data.PicInfo.cFileSuffix}`
+              }
+            ]
+          : []
+      )
       setWechatQrCodeFiles(
         data.BarCodeInfo?.UID
           ? [
@@ -44,6 +56,16 @@ export default function Index() {
               }
             ]
           : []
+      )
+      setListIntroduceFiles(
+        data.list_IntroduceInfo?.map((item) => ({
+          url: `${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`
+        })) ?? []
+      )
+      setListProjectFiles(
+        data.list_ProjectInfo?.map((item) => ({
+          url: `${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`
+        })) ?? []
       )
     } catch {
       setFormValue({})
@@ -81,12 +103,43 @@ export default function Index() {
     }
     const data = { ...formValue }
     try {
+      if (avatarFiles.length > 0) {
+        const { UID } = await FilesAPI.upload({
+          file: avatarFiles[0],
+          fileType: FileType.AVATAR
+        })
+        data.picUID = UID
+      }
       if (wechatQrCodeFiles.length > 0) {
         const { UID } = await FilesAPI.upload({
           file: wechatQrCodeFiles[0],
           fileType: FileType.QRCODE
         })
         data.cWetBarCodeUID = UID
+      }
+      if (listIntroduceFiles.length > 0) {
+        const UIDList = await Promise.all(
+          listIntroduceFiles.map(async (file) => {
+            const { UID } = await FilesAPI.upload({
+              file,
+              fileType: FileType.INTRODUCTION
+            })
+            return UID
+          })
+        )
+        data.list_IntroduceUID = UIDList
+      }
+      if (listProjectFiles.length > 0) {
+        const UIDList = await Promise.all(
+          listProjectFiles.map(async (file) => {
+            const { UID } = await FilesAPI.upload({
+              file,
+              fileType: FileType.PRODUCTION
+            })
+            return UID
+          })
+        )
+        data.list_ProjectUID = UIDList
       }
       await UsersAPI.edit(data)
       Taro.showToast({
@@ -106,6 +159,14 @@ export default function Index() {
   return (
     <View className="pb-4">
       <AtForm onSubmit={() => handleSubmit()}>
+        <View className="px-4 py-2">头像</View>
+        <AtImagePicker
+          className="px-1"
+          files={avatarFiles}
+          multiple={false}
+          showAddBtn={avatarFiles.length === 0}
+          onChange={(files) => setAvatarFiles(files)}
+        />
         <AtInput
           name="cUserName"
           title="姓名"
@@ -253,7 +314,23 @@ export default function Index() {
           placeholder="请输入"
         />
 
-        {/* <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">业务介绍</View> */}
+        <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">业务介绍</View>
+        <AtImagePicker
+          className="p-1"
+          files={listIntroduceFiles}
+          multiple
+          showAddBtn
+          onChange={(files) => setListIntroduceFiles(files)}
+        />
+
+        <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">行业案例</View>
+        <AtImagePicker
+          className="p-1"
+          files={listProjectFiles}
+          multiple
+          showAddBtn
+          onChange={(files) => setListProjectFiles(files)}
+        />
 
         <View className="flex items-center">
           <Checkbox

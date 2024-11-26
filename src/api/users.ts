@@ -15,13 +15,17 @@ export interface UserVo {
   cEmail?: string
   cWetName?: string
   cCompanyIntroduce?: string
+  picUID?: string
   cWetBarCodeUID?: string
   list_IntroduceUID?: string[]
   list_ProjectUID?: string[]
-  BarCodeInfo?: BarCodeInfo
+  PicInfo?: FileInfo
+  BarCodeInfo?: FileInfo
+  list_IntroduceInfo?: FileInfo[]
+  list_ProjectInfo?: FileInfo[]
 }
 
-interface BarCodeInfo {
+interface FileInfo {
   UID?: string
   cFilePath?: string
   cFileReName?: string
