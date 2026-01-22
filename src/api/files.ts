@@ -16,7 +16,17 @@ export const FilesAPI = {
           cFileType: data.fileType
         },
         success: (res) => {
-          resolve(JSON.parse(res.data).data)
+          const parsedData = JSON.parse(res.data)
+          if (parsedData.success) {
+            resolve(parsedData.data)
+          } else {
+            Taro.showToast({
+              title: '文件服务器错误',
+              icon: 'error',
+              duration: 2000
+            })
+            reject(new Error('文件服务器错误'))
+          }
         },
         fail: (err) => {
           Taro.showToast({ title: '文件上传失败', icon: 'error', duration: 2000 })

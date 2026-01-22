@@ -1,3 +1,3 @@
 export const appConfig = {
-  name: '慧友天工云'
+  name: '慧友名片'
 }

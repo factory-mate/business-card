@@ -11,7 +11,7 @@ import prodConfig from './prod'
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig<'vite'>(async (merge) => {
   const baseConfig: UserConfigExport<'vite'> = {
-    projectName: '慧友天工云',
+    projectName: '慧友名片',
     date: '2024-10-5',
     designWidth: 750,
     deviceRatio: {
