@@ -172,6 +172,7 @@ export default function Index() {
           title="姓名"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cUserName}
           onChange={(value) =>
             setFormValue({
@@ -186,6 +187,7 @@ export default function Index() {
           title="手机"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cPhone}
           onChange={(value) =>
             setFormValue({
@@ -200,6 +202,7 @@ export default function Index() {
           title="邮箱"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cEmail}
           onChange={(value) =>
             setFormValue({
@@ -213,6 +216,7 @@ export default function Index() {
           title="微信号"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cWetName}
           onChange={(value) =>
             setFormValue({
@@ -238,6 +242,7 @@ export default function Index() {
           title="公司"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cCompany}
           onChange={(value) =>
             setFormValue({
@@ -252,6 +257,7 @@ export default function Index() {
           title="部门"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cDepartment}
           onChange={(value) =>
             setFormValue({
@@ -265,6 +271,7 @@ export default function Index() {
           title="职位"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cPost}
           onChange={(value) =>
             setFormValue({
@@ -278,6 +285,7 @@ export default function Index() {
           title="企业官网"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cUrl}
           onChange={(value) =>
             setFormValue({
@@ -291,6 +299,7 @@ export default function Index() {
           title="地址"
           type="text"
           placeholder="请填写"
+          cursor={-1}
           value={formValue.cAddress}
           onChange={(value) =>
             setFormValue({
