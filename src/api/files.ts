@@ -3,6 +3,14 @@ import type { File } from 'taro-ui/types/image-picker'
 
 import { API_DOMAIN_PREFIX } from './request'
 
+export interface FileInfo {
+  UID?: string
+  cFilePath?: string
+  cFileReName?: string
+  cFileName?: string
+  cFileSuffix?: string
+}
+
 const API_PREFIX = '/api/sys_File'
 
 export const FilesAPI = {

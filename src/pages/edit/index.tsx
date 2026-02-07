@@ -2,14 +2,19 @@ import { Checkbox, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import { AtButton, AtForm, AtImagePicker, AtInput, AtTextarea } from 'taro-ui'
-import type { AtImagePickerProps } from 'taro-ui/types/image-picker'
+import type { AtImagePickerProps, File } from 'taro-ui/types/image-picker'
 
 import { FilesAPI, FileType, UsersAPI, type UserVo } from '@/api'
+import { getFileUrl } from '@/utils'
 
 definePageConfig({
   navigationBarTitleText: '编辑名片',
-  enableShareAppMessage: true
+  enableShareAppMessage: false
 })
+
+interface FileWithUid extends File {
+  uid?: string
+}
 
 export default function Index() {
   const [formValue, setFormValue] = useState<UserVo>({
@@ -26,9 +31,10 @@ export default function Index() {
   })
   const [avatarFiles, setAvatarFiles] = useState<AtImagePickerProps['files']>([])
   const [wechatQrCodeFiles, setWechatQrCodeFiles] = useState<AtImagePickerProps['files']>([])
-  const [listIntroduceFiles, setListIntroduceFiles] = useState<AtImagePickerProps['files']>([])
-  const [listProjectFiles, setListProjectFiles] = useState<AtImagePickerProps['files']>([])
+  const [listIntroduceFiles, setListIntroduceFiles] = useState<FileWithUid[]>([])
+  const [listProjectFiles, setListProjectFiles] = useState<FileWithUid[]>([])
   const [privacyChecked, setPrivacyChecked] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   Taro.useLoad(async () => {
     await fetchUserInfo()
@@ -36,43 +42,32 @@ export default function Index() {
 
   async function fetchUserInfo() {
     const userId = Taro.getStorageSync('user').UserId
+    Taro.showLoading({ title: '加载中...' })
     try {
       const { data } = await UsersAPI.getAllInfo(userId)
       setFormValue(data)
-      setAvatarFiles(
-        data.PicInfo?.UID
-          ? [
-              {
-                url: `${data.PicInfo.cFilePath}${data.PicInfo.cFileReName}${data.PicInfo.cFileSuffix}`
-              }
-            ]
-          : []
-      )
-      setWechatQrCodeFiles(
-        data.BarCodeInfo?.UID
-          ? [
-              {
-                url: `${data.BarCodeInfo.cFilePath}${data.BarCodeInfo.cFileReName}${data.BarCodeInfo.cFileSuffix}`
-              }
-            ]
-          : []
-      )
+      setAvatarFiles(data.PicInfo?.UID ? [{ url: getFileUrl(data.PicInfo) }] : [])
+      setWechatQrCodeFiles(data.BarCodeInfo?.UID ? [{ url: getFileUrl(data.BarCodeInfo) }] : [])
       setListIntroduceFiles(
-        data.list_IntroduceInfo?.map((item) => ({
-          url: `${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`
-        })) ?? []
+        data.list_IntroduceInfo?.map((item) => ({ url: getFileUrl(item), uid: item.UID })) ?? []
       )
       setListProjectFiles(
-        data.list_ProjectInfo?.map((item) => ({
-          url: `${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`
-        })) ?? []
+        data.list_ProjectInfo?.map((item) => ({ url: getFileUrl(item), uid: item.UID })) ?? []
       )
     } catch {
       setFormValue({})
     }
+    Taro.hideLoading()
   }
 
   async function handleSubmit() {
+    if (isSubmitting) {
+      Taro.showToast({
+        title: '请勿重复提交',
+        icon: 'none'
+      })
+      return
+    }
     if (!privacyChecked) {
       Taro.showToast({
         title: '请先阅读并同意《用户服务协议》及《隐私政策》',
@@ -101,55 +96,80 @@ export default function Index() {
       })
       return
     }
+
+    setIsSubmitting(true)
+
     const data = { ...formValue }
+
     try {
-      if (avatarFiles.length > 0) {
+      if (avatarFiles.filter((i) => i.file).length > 0) {
         const { UID } = await FilesAPI.upload({
           file: avatarFiles[0],
           fileType: FileType.AVATAR
         })
-        data.picUID = UID
+        data.cPicUID = UID
       }
-      if (wechatQrCodeFiles.length > 0) {
+      if (wechatQrCodeFiles.filter((i) => i.file).length > 0) {
         const { UID } = await FilesAPI.upload({
           file: wechatQrCodeFiles[0],
           fileType: FileType.QRCODE
         })
         data.cWetBarCodeUID = UID
       }
-      if (listIntroduceFiles.length > 0) {
+      if (listIntroduceFiles.filter((i) => i.file).length > 0) {
         const UIDList = await Promise.all(
           listIntroduceFiles.map(async (file) => {
-            const { UID } = await FilesAPI.upload({
-              file,
-              fileType: FileType.INTRODUCTION
-            })
+            let UID = ''
+            if (file.file) {
+              UID = (
+                await FilesAPI.upload({
+                  file,
+                  fileType: FileType.INTRODUCTION
+                })
+              ).UID
+            } else {
+              UID = file.uid!
+            }
             return UID
           })
         )
         data.list_IntroduceUID = UIDList
+      } else {
+        data.list_IntroduceUID = listIntroduceFiles.map((i) => i.uid!)
       }
-      if (listProjectFiles.length > 0) {
+      if (listProjectFiles.filter((i) => i.file).length > 0) {
         const UIDList = await Promise.all(
           listProjectFiles.map(async (file) => {
-            const { UID } = await FilesAPI.upload({
-              file,
-              fileType: FileType.PRODUCTION
-            })
+            let UID = ''
+            if (file.file) {
+              UID = (
+                await FilesAPI.upload({
+                  file,
+                  fileType: FileType.PRODUCTION
+                })
+              ).UID
+            } else {
+              UID = file.uid!
+            }
             return UID
           })
         )
         data.list_ProjectUID = UIDList
+      } else {
+        data.list_ProjectUID = listProjectFiles.map((i) => i.uid!)
       }
       await UsersAPI.edit(data)
       Taro.showToast({
         title: '保存成功',
         icon: 'success'
       })
-      Taro.switchTab({ url: '/pages/index/index' })
+      setTimeout(() => {
+        Taro.switchTab({ url: '/pages/index/index' })
+      }, 500)
     } catch {
       //
     }
+    setIsSubmitting(false)
   }
 
   function navToPrivacyPolicy() {
@@ -319,7 +339,8 @@ export default function Index() {
               cCompanyIntroduce: value.toString()
             })
           }
-          maxLength={500}
+          maxLength={200}
+          height={250}
           placeholder="请输入"
         />
 
@@ -371,6 +392,8 @@ export default function Index() {
           <AtButton
             type="primary"
             formType="submit"
+            loading={isSubmitting}
+            disabled={isSubmitting}
           >
             保存
           </AtButton>

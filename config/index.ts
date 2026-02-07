@@ -33,6 +33,7 @@ export default defineConfig<'vite'>(async (merge) => {
       '@/api': path.resolve(__dirname, '..', 'src/api'),
       '@/components': path.resolve(__dirname, '..', 'src/components'),
       '@/config': path.resolve(__dirname, '..', 'src/config'),
+      '@/utils': path.resolve(__dirname, '..', 'src/utils'),
       '@/types': path.resolve(__dirname, '..', 'src/types')
     },
     compiler: {

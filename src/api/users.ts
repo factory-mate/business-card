@@ -1,3 +1,4 @@
+import type { FileInfo } from './files'
 import { request } from './request'
 
 const API_PREFIX = '/api/sys_User'
@@ -15,7 +16,7 @@ export interface UserVo {
   cEmail?: string
   cWetName?: string
   cCompanyIntroduce?: string
-  picUID?: string
+  cPicUID?: string
   cWetBarCodeUID?: string
   list_IntroduceUID?: string[]
   list_ProjectUID?: string[]
@@ -23,14 +24,6 @@ export interface UserVo {
   BarCodeInfo?: FileInfo
   list_IntroduceInfo?: FileInfo[]
   list_ProjectInfo?: FileInfo[]
-}
-
-interface FileInfo {
-  UID?: string
-  cFilePath?: string
-  cFileReName?: string
-  cFileName?: string
-  cFileSuffix?: string
 }
 
 export const UsersAPI = {

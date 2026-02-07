@@ -2,8 +2,16 @@ import Taro from '@tarojs/taro'
 
 export const API_DOMAIN_PREFIX = 'https://huiyoucloud.com:8099'
 
-export const request = <T = any>(options: RequestOptions): Promise<Response<T>> =>
+// interface CustomOptions {
+//   skipErrorMsg?: boolean
+// }
+
+export const request = <T = any>(
+  options: RequestOptions
+  // customOptions: CustomOptions = {}
+): Promise<Response<T>> =>
   new Promise((resolve, reject) => {
+    // const { skipErrorMsg } = customOptions
     Taro.request({
       url: API_DOMAIN_PREFIX + options.url,
       method: options.method,
@@ -27,7 +35,7 @@ export const request = <T = any>(options: RequestOptions): Promise<Response<T>> 
           Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
           Taro.removeStorageSync('token')
           Taro.removeStorageSync('user')
-          Taro.redirectTo({ url: '/pages/login/index' })
+          // Taro.switchTab({ url: '/pages/index/index' })
         } else if (statusCode !== 200) {
           Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
           reject(data)
@@ -52,7 +60,7 @@ export const request = <T = any>(options: RequestOptions): Promise<Response<T>> 
 
 interface RequestOptions {
   url: string
-  method: 'GET' | 'POST'
+  method: 'GET' | 'POST' | 'DELETE'
   data?: any
 }
 

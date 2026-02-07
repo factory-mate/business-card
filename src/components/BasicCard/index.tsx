@@ -1,21 +1,37 @@
 import { Image, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 
-import type { UserVo } from '@/api'
-
+import { ViewAPI, type UserVo } from '@/api'
+import StarArea from './StarArea'
+import { checkFileUrl, getFileUrl } from '@/utils'
 interface BasicCardProps {
   data: UserVo
   editable?: boolean
+  starable?: boolean
+  recordable?: boolean
 }
 
 export default function BasicCard(props: BasicCardProps) {
-  const { data, editable } = props
+  const { data, editable, starable, recordable } = props
 
-  function handleEdit() {
+  const handleEdit = () =>
     Taro.navigateTo({
       url: '/pages/edit/index'
     })
-  }
+
+  Taro.useDidShow(() => {
+    const userId = Taro.getStorageSync('user').UserId
+    const viewId = Taro.getCurrentInstance().router?.params.id!
+
+    if (!recordable || !userId) {
+      return
+    }
+
+    ViewAPI.add({
+      cUserId: userId,
+      cViewId: viewId
+    })
+  })
 
   return (
     <View className="relative flex h-fit w-auto flex-col rounded-md p-4 shadow-xl">
@@ -28,11 +44,13 @@ export default function BasicCard(props: BasicCardProps) {
         </Text>
       )}
 
+      {starable && <StarArea />}
+
       <View className="flex items-center space-x-4">
         <View>
-          {data.PicInfo?.cFilePath && data.PicInfo?.cFileReName && data.PicInfo?.cFileSuffix ? (
+          {checkFileUrl(data.PicInfo) ? (
             <Image
-              src={`${data.PicInfo?.cFilePath}${data.PicInfo?.cFileReName}${data.PicInfo?.cFileSuffix}`}
+              src={getFileUrl(data.PicInfo)}
               className="size-24 rounded-full"
             />
           ) : (

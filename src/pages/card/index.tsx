@@ -19,12 +19,14 @@ export default function Index() {
 
   async function fetchUserInfo() {
     const userId = Taro.getCurrentInstance().router?.params.id
+    Taro.showLoading({ title: '加载中...' })
     try {
       const { data } = await UsersAPI.getAllInfo(userId!)
       setUserDetail(data)
     } catch {
       setUserDetail({})
     }
+    Taro.hideLoading()
   }
 
   return (
@@ -32,6 +34,8 @@ export default function Index() {
       <BasicCard
         data={userDetail}
         editable={false}
+        starable
+        recordable
       />
       <OperationBar data={userDetail} />
       <CompanyInfo data={userDetail} />

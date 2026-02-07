@@ -4,7 +4,7 @@ export default defineAppConfig({
     'pages/edit/index',
     'pages/card-list/index',
     'pages/my/index',
-    'pages/share/index',
+    'pages/card/index',
     'pages/privacy-policy/index'
   ],
   window: {

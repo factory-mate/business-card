@@ -2,9 +2,14 @@ import { Button, Image, Text, View } from '@tarojs/components'
 import { addPhoneContact, makePhoneCall, useShareAppMessage } from '@tarojs/taro'
 import { useState } from 'react'
 import { AtModal, AtModalContent, AtModalHeader } from 'taro-ui'
+import LaAddressBook from '../../assets/share/LaAddressBook.png'
+import LaIdCard from '../../assets/share/LaIdCard.png'
+import LaWeixin from '../../assets/share/LaWeixin.png'
+import LaPhone from '../../assets/share/LaPhone.png'
 
 import type { UserVo } from '@/api'
 import { appConfig } from '@/config'
+import { checkFileUrl, getFileUrl } from '@/utils'
 
 interface OperationBarProps {
   data: UserVo
@@ -15,7 +20,7 @@ export default function OperationBar(props: OperationBarProps) {
 
   useShareAppMessage(() => ({
     title: appConfig.name,
-    path: `/pages/share/index?id=${data.UID}`
+    path: `/pages/card/index?id=${data.UID}`
   }))
 
   const [open, setOpen] = useState(false)
@@ -39,31 +44,43 @@ export default function OperationBar(props: OperationBarProps) {
   return (
     <View className="mt-2 flex items-center justify-between rounded-md border p-2 shadow-xl">
       {data.cPhone && (
-        <View>
+        <View
+          className="flex flex-col items-center justify-center"
+          onClick={handleMakePhoneCall}
+        >
+          <Image
+            src={LaPhone}
+            className="size-6"
+            mode="aspectFit"
+          />
           <Button
             style={{ border: 'none', fontSize: '12px' }}
             plain
             hoverClass="none"
-            onClick={handleMakePhoneCall}
           >
             拨打电话
           </Button>
         </View>
       )}
-      {data.BarCodeInfo?.cFilePath &&
-        data.BarCodeInfo?.cFileReName &&
-        data.BarCodeInfo?.cFileSuffix && (
-          <View>
-            <Button
-              style={{ border: 'none', fontSize: '12px' }}
-              plain
-              hoverClass="none"
-              onClick={handleAddWechat}
-            >
-              添加微信
-            </Button>
-          </View>
-        )}
+      {checkFileUrl(data.BarCodeInfo) && (
+        <View
+          className="flex flex-col items-center justify-center"
+          onClick={handleAddWechat}
+        >
+          <Image
+            src={LaWeixin}
+            className="size-6"
+            mode="aspectFit"
+          />
+          <Button
+            style={{ border: 'none', fontSize: '12px' }}
+            plain
+            hoverClass="none"
+          >
+            添加微信
+          </Button>
+        </View>
+      )}
       <View>
         <Button
           style={{ border: 'none', fontSize: '12px' }}
@@ -71,15 +88,29 @@ export default function OperationBar(props: OperationBarProps) {
           plain
           hoverClass="none"
         >
-          分享名片
+          <View className="flex flex-col items-center justify-center">
+            <Image
+              src={LaIdCard}
+              className="size-6"
+              mode="aspectFit"
+            />
+            分享名片
+          </View>
         </Button>
       </View>
-      <View>
+      <View
+        className="flex flex-col items-center justify-center"
+        onClick={handleAddPhoneContact}
+      >
+        <Image
+          src={LaAddressBook}
+          className="size-6"
+          mode="aspectFit"
+        />
         <Button
           style={{ border: 'none', fontSize: '12px' }}
           plain
           hoverClass="none"
-          onClick={handleAddPhoneContact}
         >
           存到通讯录
         </Button>
@@ -94,7 +125,7 @@ export default function OperationBar(props: OperationBarProps) {
           <View className="flex flex-col items-center">
             <Text>加我好友，了解更多服务</Text>
             <Image
-              src={`${data.BarCodeInfo?.cFilePath}${data.BarCodeInfo?.cFileReName}${data.BarCodeInfo?.cFileSuffix}`}
+              src={getFileUrl(data.BarCodeInfo)}
               mode="aspectFit"
               showMenuByLongpress
             />

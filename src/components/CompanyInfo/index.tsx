@@ -2,6 +2,7 @@ import { Image, Text, View } from '@tarojs/components'
 import { AtDivider } from 'taro-ui'
 
 import type { UserVo } from '@/api'
+import { getFileUrl } from '@/utils'
 
 interface CompanyInfoProps {
   data: UserVo
@@ -9,6 +10,7 @@ interface CompanyInfoProps {
 
 export default function CompanyInfo(props: CompanyInfoProps) {
   const { data } = props
+
   return (
     <View>
       {data.cCompanyIntroduce && (
@@ -33,7 +35,7 @@ export default function CompanyInfo(props: CompanyInfoProps) {
               className="mt-1"
             >
               <Image
-                src={`${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`}
+                src={getFileUrl(item)}
                 className="w-full"
                 mode="aspectFill"
               />
@@ -54,7 +56,7 @@ export default function CompanyInfo(props: CompanyInfoProps) {
               className="mt-1"
             >
               <Image
-                src={`${item.cFilePath}${item.cFileReName}${item.cFileSuffix}`}
+                src={getFileUrl(item)}
                 className="w-full"
                 mode="aspectFill"
               />
