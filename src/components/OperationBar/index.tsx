@@ -115,24 +115,25 @@ export default function OperationBar(props: OperationBarProps) {
           存到通讯录
         </Button>
       </View>
-
-      <AtModal
-        isOpened={open}
-        onClose={() => setOpen(false)}
-      >
-        <AtModalHeader>添加微信</AtModalHeader>
-        <AtModalContent>
-          <View className="flex flex-col items-center">
-            <Text>加我好友，了解更多服务</Text>
-            <Image
-              src={getFileUrl(data.BarCodeInfo)}
-              mode="aspectFit"
-              showMenuByLongpress
-            />
-            <Text>长按二维码添加好友</Text>
-          </View>
-        </AtModalContent>
-      </AtModal>
+      {checkFileUrl(data.BarCodeInfo) && (
+        <AtModal
+          isOpened={open}
+          onClose={() => setOpen(false)}
+        >
+          <AtModalHeader>添加微信</AtModalHeader>
+          <AtModalContent>
+            <View className="flex flex-col items-center">
+              <Text>加我好友，了解更多服务</Text>
+              <Image
+                src={getFileUrl(data.BarCodeInfo)}
+                mode="aspectFit"
+                showMenuByLongpress
+              />
+              <Text>长按二维码添加好友</Text>
+            </View>
+          </AtModalContent>
+        </AtModal>
+      )}
     </View>
   )
 }
