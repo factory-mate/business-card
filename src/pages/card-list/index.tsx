@@ -1,6 +1,6 @@
 import { ScrollView, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { AtList, AtListItem, AtTabs, AtTabsPane } from 'taro-ui'
 
 import './index.scss'

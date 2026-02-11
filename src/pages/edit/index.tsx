@@ -16,6 +16,7 @@ import type { AtImagePickerProps, File } from 'taro-ui/types/image-picker'
 
 import { FilesAPI, FileType, UsersAPI, type UserVo, type CheckPhoneCodeDto } from '@/api'
 import { getFileUrl } from '@/utils'
+import './index.scss'
 
 definePageConfig({
   navigationBarTitleText: '编辑名片',
