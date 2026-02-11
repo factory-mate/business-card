@@ -1,10 +1,20 @@
 import { Checkbox, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
-import { AtButton, AtForm, AtImagePicker, AtInput, AtTextarea } from 'taro-ui'
+import {
+  AtButton,
+  AtForm,
+  AtImagePicker,
+  AtInput,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtModalHeader,
+  AtTextarea
+} from 'taro-ui'
 import type { AtImagePickerProps, File } from 'taro-ui/types/image-picker'
 
-import { FilesAPI, FileType, UsersAPI, type UserVo } from '@/api'
+import { FilesAPI, FileType, UsersAPI, type UserVo, type CheckPhoneCodeDto } from '@/api'
 import { getFileUrl } from '@/utils'
 
 definePageConfig({
@@ -17,6 +27,7 @@ interface FileWithUid extends File {
 }
 
 export default function Index() {
+  const [open, setOpen] = useState(false)
   const [formValue, setFormValue] = useState<UserVo>({
     cUserName: '',
     cPhone: '',
@@ -35,6 +46,13 @@ export default function Index() {
   const [listProjectFiles, setListProjectFiles] = useState<FileWithUid[]>([])
   const [privacyChecked, setPrivacyChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [restSecond, setRestSecond] = useState(0)
+
+  const [checkPhoneFormValue, setCheckPhoneFormValue] = useState<CheckPhoneCodeDto>({
+    UID: '',
+    cPhone: '',
+    cCheckCode: ''
+  })
 
   Taro.useLoad(async () => {
     await fetchUserInfo()
@@ -108,6 +126,8 @@ export default function Index() {
           fileType: FileType.AVATAR
         })
         data.cPicUID = UID
+      } else if (formValue.PicInfo?.UID) {
+        data.cPicUID = formValue.PicInfo?.UID
       }
       if (wechatQrCodeFiles.filter((i) => i.file).length > 0) {
         const { UID } = await FilesAPI.upload({
@@ -115,6 +135,8 @@ export default function Index() {
           fileType: FileType.QRCODE
         })
         data.cWetBarCodeUID = UID
+      } else if (formValue.BarCodeInfo?.UID) {
+        data.cWetBarCodeUID = formValue.BarCodeInfo?.UID
       }
       if (listIntroduceFiles.filter((i) => i.file).length > 0) {
         const UIDList = await Promise.all(
@@ -176,6 +198,77 @@ export default function Index() {
     Taro.navigateTo({ url: '/pages/privacy-policy/index' })
   }
 
+  async function handleSendSms() {
+    if (!checkPhoneFormValue.cPhone) {
+      Taro.showToast({
+        title: '请输入手机号',
+        icon: 'none'
+      })
+      return
+    }
+    try {
+      const { success } = await UsersAPI.sendPhoneCode({
+        UID: formValue.UID!,
+        cPhone: checkPhoneFormValue.cPhone
+      })
+      if (success) {
+        Taro.showToast({
+          title: '发送成功',
+          icon: 'none'
+        })
+        setRestSecond(60)
+        setInterval(() => {
+          setRestSecond((x) => x - 1)
+        }, 1000)
+      }
+    } catch {}
+  }
+
+  async function handleConfirm() {
+    if (!checkPhoneFormValue.cPhone) {
+      Taro.showToast({
+        title: '请输入手机号',
+        icon: 'none'
+      })
+      return
+    }
+    if (!checkPhoneFormValue.cCheckCode) {
+      Taro.showToast({
+        title: '请输入验证码',
+        icon: 'none'
+      })
+      return
+    }
+    try {
+      const { success } = await UsersAPI.checkPhoneCode({
+        UID: formValue.UID!,
+        cPhone: checkPhoneFormValue.cPhone,
+        cCheckCode: checkPhoneFormValue.cCheckCode
+      })
+      if (success) {
+        Taro.showToast({
+          title: '验证成功',
+          icon: 'success'
+        })
+        setFormValue({
+          ...formValue,
+          cPhone: checkPhoneFormValue.cPhone
+        })
+        setOpen(false)
+        setCheckPhoneFormValue({
+          ...checkPhoneFormValue,
+          cPhone: '',
+          cCheckCode: ''
+        })
+      }
+    } catch {
+      setCheckPhoneFormValue({
+        ...checkPhoneFormValue,
+        cCheckCode: ''
+      })
+    }
+  }
+
   return (
     <View className="pb-4">
       <AtForm onSubmit={() => handleSubmit()}>
@@ -206,17 +299,28 @@ export default function Index() {
           name="cPhone"
           title="手机"
           type="text"
-          placeholder="请填写"
+          placeholder="请验证手机号"
           cursor={-1}
           value={formValue.cPhone}
-          onChange={(value) =>
-            setFormValue({
-              ...formValue,
-              cPhone: value.toString()
-            })
-          }
           required
-        />
+        >
+          <View className="pr-2">
+            <AtButton
+              size="small"
+              onClick={() => {
+                setOpen(true)
+                setRestSecond(0)
+                setCheckPhoneFormValue({
+                  ...checkPhoneFormValue,
+                  cCheckCode: '',
+                  cPhone: ''
+                })
+              }}
+            >
+              更改
+            </AtButton>
+          </View>
+        </AtInput>
         <AtInput
           name="cEmail"
           title="邮箱"
@@ -399,6 +503,75 @@ export default function Index() {
           </AtButton>
         </View>
       </AtForm>
+
+      <AtModal
+        isOpened={open}
+        onClose={() => {
+          setOpen(false)
+        }}
+      >
+        <AtModalHeader>验证手机号</AtModalHeader>
+        <AtModalContent>
+          <View className="flex flex-col items-center">
+            <AtInput
+              name="cPhone"
+              title="手机号"
+              type="text"
+              placeholder="请输入"
+              cursor={-1}
+              value={checkPhoneFormValue.cPhone}
+              onChange={(value) =>
+                setCheckPhoneFormValue({
+                  ...checkPhoneFormValue,
+                  cPhone: value.toString()
+                })
+              }
+              required
+            />
+            <AtInput
+              name="cPhone"
+              title="验证码"
+              type="text"
+              placeholder="请输入"
+              cursor={-1}
+              value={checkPhoneFormValue.cCheckCode}
+              onChange={(value) =>
+                setCheckPhoneFormValue({
+                  ...checkPhoneFormValue,
+                  cCheckCode: value.toString()
+                })
+              }
+              required
+            >
+              <View className="pr-2">
+                <AtButton
+                  size="small"
+                  onClick={() => handleSendSms()}
+                  disabled={restSecond > 0}
+                >
+                  {restSecond > 0 ? `${restSecond}s` : '发送'}
+                </AtButton>
+              </View>
+            </AtInput>
+          </View>
+        </AtModalContent>
+        <AtModalAction>
+          <View className="flex w-full items-center">
+            <AtButton
+              className="w-1/2"
+              onClick={() => setOpen(false)}
+            >
+              取消
+            </AtButton>
+            <AtButton
+              className="w-1/2"
+              onClick={() => handleConfirm()}
+            >
+              确定
+            </AtButton>
+          </View>
+        </AtModalAction>
+      </AtModal>
     </View>
   )
 }

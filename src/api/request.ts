@@ -32,16 +32,16 @@ export const request = <T = any>(
           '请求错误'
         ).toString()
         if (statusCode === 401 || statusCode === 403) {
-          Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
+          Taro.showToast({ title: errorMessage, icon: 'none', duration: 2000 })
           Taro.removeStorageSync('token')
           Taro.removeStorageSync('user')
           // Taro.switchTab({ url: '/pages/index/index' })
         } else if (statusCode !== 200) {
-          Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
+          Taro.showToast({ title: errorMessage, icon: 'none', duration: 2000 })
           reject(data)
         } else {
           if (!data.success) {
-            Taro.showToast({ title: errorMessage, icon: 'error', duration: 2000 })
+            Taro.showToast({ title: errorMessage, icon: 'none', duration: 2000 })
             reject(data)
           }
           resolve(data)
@@ -50,7 +50,7 @@ export const request = <T = any>(
       fail: (err) => {
         Taro.showToast({
           title: err.errMsg ?? '请求错误',
-          icon: 'error',
+          icon: 'none',
           duration: 2000
         })
         reject(err)

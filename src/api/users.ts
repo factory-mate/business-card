@@ -26,6 +26,15 @@ export interface UserVo {
   list_ProjectInfo?: FileInfo[]
 }
 
+export interface CheckPhoneCodeDto extends SendPhoneCodeDto {
+  cCheckCode: string
+}
+
+export interface SendPhoneCodeDto {
+  UID: string
+  cPhone: string
+}
+
 export const UsersAPI = {
   getAllInfo: (id: string) =>
     request<UserVo>({
@@ -46,6 +55,18 @@ export const UsersAPI = {
   edit: (data: UserVo) =>
     request({
       url: `${API_PREFIX}/Edit`,
+      method: 'POST',
+      data
+    }),
+  sendPhoneCode: (data: SendPhoneCodeDto) =>
+    request({
+      url: `${API_PREFIX}/SendSms`,
+      method: 'POST',
+      data
+    }),
+  checkPhoneCode: (data: CheckPhoneCodeDto) =>
+    request({
+      url: `${API_PREFIX}/UpdatePhone`,
       method: 'POST',
       data
     })

@@ -6,7 +6,7 @@ import { AtList, AtListItem, AtTabs, AtTabsPane } from 'taro-ui'
 import './index.scss'
 import { AuthorizationArea } from '@/components'
 import { StarAPI, ViewAPI, type StarVo, type ViewVo } from '@/api'
-import { getFileUrl } from '@/utils'
+import { checkFileUrl, getFileUrl } from '@/utils'
 
 definePageConfig({
   navigationBarTitleText: '名片夹',
@@ -182,7 +182,11 @@ export default function Index() {
                           title={i.cCollectName}
                           note={i.cCollectPost}
                           extraText={i.dCreateTime}
-                          thumb={getFileUrl(i.CollectPicInfo)}
+                          thumb={
+                            checkFileUrl(i.CollectPicInfo)
+                              ? getFileUrl(i.CollectPicInfo)
+                              : 'https://api.dicebear.com/9.x/initials/svg?seed=用户'
+                          }
                           onClick={() =>
                             Taro.navigateTo({ url: `/pages/card/index?id=${i.cCollectID}` })
                           }
@@ -194,7 +198,11 @@ export default function Index() {
                           title={i.cUserName}
                           note={i.cUserPost}
                           extraText={i.dCreateTime}
-                          thumb={getFileUrl(i.UserPicInfo)}
+                          thumb={
+                            checkFileUrl(i.UserPicInfo)
+                              ? getFileUrl(i.UserPicInfo)
+                              : 'https://api.dicebear.com/9.x/initials/svg?seed=用户'
+                          }
                           onClick={() =>
                             Taro.navigateTo({ url: `/pages/card/index?id=${i.cUserID}` })
                           }

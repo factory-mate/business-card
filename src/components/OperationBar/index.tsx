@@ -3,9 +3,9 @@ import { addPhoneContact, makePhoneCall, useShareAppMessage } from '@tarojs/taro
 import { useState } from 'react'
 import { AtModal, AtModalContent, AtModalHeader } from 'taro-ui'
 import LaAddressBook from '../../assets/share/LaAddressBook.png'
-import LaIdCard from '../../assets/share/LaIdCard.png'
-import LaWeixin from '../../assets/share/LaWeixin.png'
-import LaPhone from '../../assets/share/LaPhone.png'
+import LaMdiCardAccountDetailsIdCard from '../../assets/share/MdiCardAccountDetails.png'
+import IcBaselineWechat from '../../assets/share/IcBaselineWechat.png'
+import IcBaselineCall from '../../assets/share/IcBaselineCall.png'
 
 import type { UserVo } from '@/api'
 import { appConfig } from '@/config'
@@ -49,8 +49,8 @@ export default function OperationBar(props: OperationBarProps) {
           onClick={handleMakePhoneCall}
         >
           <Image
-            src={LaPhone}
-            className="size-6"
+            src={IcBaselineCall}
+            className="size-9"
             mode="aspectFit"
           />
           <Button
@@ -68,8 +68,8 @@ export default function OperationBar(props: OperationBarProps) {
           onClick={handleAddWechat}
         >
           <Image
-            src={LaWeixin}
-            className="size-6"
+            src={IcBaselineWechat}
+            className="size-9"
             mode="aspectFit"
           />
           <Button
@@ -90,8 +90,8 @@ export default function OperationBar(props: OperationBarProps) {
         >
           <View className="flex flex-col items-center justify-center">
             <Image
-              src={LaIdCard}
-              className="size-6"
+              src={LaMdiCardAccountDetailsIdCard}
+              className="size-9"
               mode="aspectFit"
             />
             分享名片
@@ -104,7 +104,7 @@ export default function OperationBar(props: OperationBarProps) {
       >
         <Image
           src={LaAddressBook}
-          className="size-6"
+          className="size-9"
           mode="aspectFit"
         />
         <Button

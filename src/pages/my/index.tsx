@@ -1,4 +1,3 @@
-import { AuthorizationArea } from '@/components'
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
@@ -10,9 +9,12 @@ definePageConfig({
 })
 
 export default function Index() {
+  const [isLogin, setIsLogin] = useState(false)
   const [version, setVersion] = useState('')
 
   Taro.useLoad(() => {
+    const token = Taro.getStorageSync('token')
+    setIsLogin(!!token)
     if (Taro.getAccountInfoSync().miniProgram.version) {
       setVersion(`v${Taro.getAccountInfoSync().miniProgram.version!}`)
     } else {
@@ -38,21 +40,23 @@ export default function Index() {
   }
 
   return (
-    <AuthorizationArea onAuthSuccess={() => {}}>
+    <View>
       <AtList>
         <AtListItem
           title="隐私政策"
           arrow="right"
           onClick={() => navToPrivacyPolicy()}
         />
-        <AtListItem
-          title="退出登录"
-          onClick={() => logout()}
-        />
+        {isLogin && (
+          <AtListItem
+            title="退出登录"
+            onClick={() => logout()}
+          />
+        )}
       </AtList>
       <View className="absolute bottom-0 w-full text-center text-sm">
         <Text>当前版本：{version}</Text>
       </View>
-    </AuthorizationArea>
+    </View>
   )
 }

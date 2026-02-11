@@ -30,7 +30,7 @@ export const FilesAPI = {
           } else {
             Taro.showToast({
               title: '文件服务器错误',
-              icon: 'error',
+              icon: 'none',
               duration: 2000
             })
             reject(new Error('文件服务器错误'))

@@ -12,22 +12,27 @@ export default function CompanyInfo(props: CompanyInfoProps) {
   const { data } = props
 
   return (
-    <View>
+    <>
       {data.cCompanyIntroduce && (
-        <>
+        <View className="mt-2 px-4 pb-4 shadow-lg">
           <AtDivider
-            className="mt-2"
             content="公司介绍"
+            height="60"
           />
-          <Text>{data.cCompanyIntroduce}</Text>
-        </>
+          <Text
+            className="text-sm text-[#888888]"
+            userSelect
+          >
+            {data.cCompanyIntroduce}
+          </Text>
+        </View>
       )}
 
       {data.list_IntroduceInfo && data.list_IntroduceInfo.length > 0 && (
-        <>
+        <View className="mt-2 px-4 pb-4 shadow-lg">
           <AtDivider
-            className="mt-2"
             content="业务介绍"
+            height="60"
           />
           {data.list_IntroduceInfo.map((item) => (
             <View
@@ -41,14 +46,14 @@ export default function CompanyInfo(props: CompanyInfoProps) {
               />
             </View>
           ))}
-        </>
+        </View>
       )}
 
       {data.list_ProjectInfo && data.list_ProjectInfo.length > 0 && (
-        <>
+        <View className="mt-2 px-4 pb-4 shadow-lg">
           <AtDivider
-            className="mt-2"
             content="行业案例"
+            height="60"
           />
           {data.list_ProjectInfo.map((item) => (
             <View
@@ -62,8 +67,8 @@ export default function CompanyInfo(props: CompanyInfoProps) {
               />
             </View>
           ))}
-        </>
+        </View>
       )}
-    </View>
+    </>
   )
 }

@@ -1,4 +1,9 @@
 .card-list {
+  .item-thumb {
+    width: 80rpx;
+    height: 80rpx;
+  }
+
   .at-list__item-thumb image {
     border-radius: 50% !important;
     object-fit: cover;
