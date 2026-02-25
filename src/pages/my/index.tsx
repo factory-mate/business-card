@@ -12,7 +12,7 @@ export default function Index() {
   const [isLogin, setIsLogin] = useState(false)
   const [version, setVersion] = useState('')
 
-  Taro.useLoad(() => {
+  Taro.useDidShow(() => {
     const token = Taro.getStorageSync('token')
     setIsLogin(!!token)
     if (Taro.getAccountInfoSync().miniProgram.version) {

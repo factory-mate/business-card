@@ -42,10 +42,15 @@ export default function AuthorizationArea(props: AuthorizationAreaProps) {
     Taro.hideLoading()
   }
 
+  function handleViewCard() {
+    Taro.navigateTo({ url: '/pages/card/index?id=56826d9b-4e59-4a77-b8bc-81a1c4e90e30' })
+  }
+
   if (!isLogin) {
     return (
-      <View className="flex h-screen flex-col items-center justify-center space-y-8">
+      <View className="flex h-screen flex-col items-center justify-center space-y-4">
         <View>创建名片需要您的授权</View>
+        <AtButton onClick={handleViewCard}>查看名片示例</AtButton>
         <AtButton
           type="primary"
           loading={isSubmitting}
