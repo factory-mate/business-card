@@ -27,6 +27,13 @@ export default function Index() {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState<(StarVo & ViewVo)[]>([])
 
+  Taro.useDidShow(() => {
+    setCurrent(0)
+    resetPageParam()
+    setListData([])
+    getPageData(0)
+  })
+
   const getStarPageData = () => {
     setLoading(true)
     Taro.showLoading({ title: '加载中...' })
@@ -145,14 +152,7 @@ export default function Index() {
   }
 
   return (
-    <AuthorizationArea
-      onAuthSuccess={() => {
-        setCurrent(0)
-        resetPageParam()
-        setListData([])
-        getPageData(0)
-      }}
-    >
+    <AuthorizationArea>
       <View className="card-list">
         <AtTabs
           current={current}
@@ -185,7 +185,7 @@ export default function Index() {
                           thumb={
                             checkFileUrl(i.CollectPicInfo)
                               ? getFileUrl(i.CollectPicInfo)
-                              : 'https://api.dicebear.com/9.x/initials/svg?seed=用户'
+                              : 'https://api.dicebear.com/9.x/initials/png?seed=用户'
                           }
                           onClick={() =>
                             Taro.navigateTo({ url: `/pages/card/index?id=${i.cCollectID}` })
@@ -201,7 +201,7 @@ export default function Index() {
                           thumb={
                             checkFileUrl(i.UserPicInfo)
                               ? getFileUrl(i.UserPicInfo)
-                              : 'https://api.dicebear.com/9.x/initials/svg?seed=用户'
+                              : 'https://api.dicebear.com/9.x/initials/png?seed=用户'
                           }
                           onClick={() =>
                             Taro.navigateTo({ url: `/pages/card/index?id=${i.cUserID}` })

@@ -8,7 +8,6 @@ import IcBaselineWechat from '../../assets/share/IcBaselineWechat.png'
 import IcBaselineCall from '../../assets/share/IcBaselineCall.png'
 
 import type { UserVo } from '@/api'
-import { appConfig } from '@/config'
 import { checkFileUrl, getFileUrl } from '@/utils'
 
 interface OperationBarProps {
@@ -17,11 +16,6 @@ interface OperationBarProps {
 
 export default function OperationBar(props: OperationBarProps) {
   const { data } = props
-
-  useShareAppMessage(() => ({
-    title: appConfig.name,
-    path: `/pages/card/index?id=${data.UID}`
-  }))
 
   const [open, setOpen] = useState(false)
 

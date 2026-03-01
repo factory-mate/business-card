@@ -5,7 +5,8 @@ export default defineAppConfig({
     'pages/card-list/index',
     'pages/my/index',
     'pages/card/index',
-    'pages/privacy-policy/index'
+    'pages/privacy-policy/index',
+    'pages/auth/index'
   ],
   window: {
     backgroundTextStyle: 'light',

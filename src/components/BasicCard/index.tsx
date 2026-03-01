@@ -51,13 +51,12 @@ export default function BasicCard(props: BasicCardProps) {
           {checkFileUrl(data.PicInfo) ? (
             <Image
               src={getFileUrl(data.PicInfo)}
-              className="size-28"
-              mode="widthFix"
+              className="size-24 rounded-full"
             />
           ) : (
             <Image
-              src="https://api.dicebear.com/9.x/initials/svg?seed=用户"
-              className="size-28 rounded-full"
+              src="https://api.dicebear.com/9.x/initials/png?seed=用户"
+              className="size-24 rounded-full"
             />
           )}
         </View>
