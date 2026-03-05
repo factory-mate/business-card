@@ -24,7 +24,7 @@ export default function Index() {
     imageUrl: shareImageUrl.current
   }))
 
-  Taro.useLoad(async () => {
+  Taro.useDidShow(async () => {
     if (!Taro.getStorageSync('token')) {
       return
     }
@@ -119,7 +119,7 @@ export default function Index() {
     ]
 
     texts.forEach((item) => {
-      ctx.font = item.font || '32px sans-serif'
+      ctx.font = item.font || '24px sans-serif'
       ctx.fillStyle = item.color || '#999999'
       ctx.fillText(item.text, item.x, item.y)
     })

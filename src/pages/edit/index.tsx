@@ -13,6 +13,7 @@ import {
   AtTextarea
 } from 'taro-ui'
 import type { AtImagePickerProps, File } from 'taro-ui/types/image-picker'
+import TaroCropper from 'taro-cropper'
 
 import { FilesAPI, FileType, UsersAPI, type UserVo, type CheckPhoneCodeDto } from '@/api'
 import { getFileUrl } from '@/utils'
@@ -48,12 +49,12 @@ export default function Index() {
   const [privacyChecked, setPrivacyChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [restSecond, setRestSecond] = useState(0)
-
   const [checkPhoneFormValue, setCheckPhoneFormValue] = useState<CheckPhoneCodeDto>({
     UID: '',
     cPhone: '',
     cCheckCode: ''
   })
+  const [cutSrc, setCutSrc] = useState('')
 
   Taro.useLoad(async () => {
     await fetchUserInfo()
@@ -121,7 +122,10 @@ export default function Index() {
     const data = { ...formValue }
 
     try {
-      if (avatarFiles.filter((i) => i.file).length > 0) {
+      if (
+        avatarFiles.filter((i) => i.file).length > 0 ||
+        avatarFiles.filter((i) => i.url).length > 0
+      ) {
         const { UID } = await FilesAPI.upload({
           file: avatarFiles[0],
           fileType: FileType.AVATAR
@@ -270,6 +274,21 @@ export default function Index() {
     }
   }
 
+  if (cutSrc) {
+    return (
+      <TaroCropper
+        src={cutSrc}
+        onCut={(path) => {
+          setAvatarFiles([{ url: path }])
+          setCutSrc('')
+        }}
+        onCancel={() => {
+          setCutSrc('')
+        }}
+      />
+    )
+  }
+
   return (
     <View className="pb-4">
       <AtForm onSubmit={() => handleSubmit()}>
@@ -280,6 +299,9 @@ export default function Index() {
           multiple={false}
           showAddBtn={avatarFiles.length === 0}
           onChange={(files) => setAvatarFiles(files)}
+          onImageClick={() => {
+            setCutSrc(avatarFiles[0].url ?? avatarFiles[0]?.file?.path)
+          }}
         />
         <AtInput
           name="cUserName"

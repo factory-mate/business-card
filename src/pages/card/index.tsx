@@ -116,7 +116,7 @@ export default function Index() {
     ]
 
     texts.forEach((item) => {
-      ctx.font = item.font || '32px sans-serif'
+      ctx.font = item.font || '24px sans-serif'
       ctx.fillStyle = item.color || '#999999'
       ctx.fillText(item.text, item.x, item.y)
     })
