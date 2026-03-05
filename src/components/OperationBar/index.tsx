@@ -1,5 +1,5 @@
 import { Button, Image, Text, View } from '@tarojs/components'
-import { addPhoneContact, makePhoneCall, useShareAppMessage } from '@tarojs/taro'
+import { addPhoneContact, makePhoneCall } from '@tarojs/taro'
 import { useState } from 'react'
 import { AtModal, AtModalContent, AtModalHeader } from 'taro-ui'
 import LaAddressBook from '../../assets/share/LaAddressBook.png'

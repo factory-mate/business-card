@@ -36,5 +36,10 @@ export default defineAppConfig({
       }
     ],
     selectedColor: '#0078d7'
+  },
+  permission: {
+    'scope.addPhoneContact': {
+      desc: '联系人信息将用于添加手机通讯录'
+    }
   }
 })
