@@ -7,6 +7,7 @@ export interface ViewVo {
   cUserID?: string
   cUserName?: string
   cUserPost?: string
+  cViewID?: string
   cViewName?: string
   cViewPost?: string
   dCreateTime?: string

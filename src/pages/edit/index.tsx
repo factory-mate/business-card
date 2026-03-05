@@ -104,7 +104,7 @@ export default function Index() {
     }
     if (!formValue.cPhone) {
       Taro.showToast({
-        title: '手机不能为空',
+        title: '请验证手机号',
         icon: 'none'
       })
       return
@@ -307,7 +307,6 @@ export default function Index() {
           name="cUserName"
           title="姓名"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cUserName}
           onChange={(value) =>
@@ -318,16 +317,24 @@ export default function Index() {
           }
           required
         />
-        <AtInput
-          name="cPhone"
-          title="手机"
-          type="text"
-          placeholder="请验证手机号"
-          cursor={-1}
-          value={formValue.cPhone}
-          required
-        >
-          <View className="pr-2">
+        <View className="flex items-center">
+          <AtInput
+            className="flex-1"
+            name="cPhone"
+            title="手机"
+            type="text"
+            cursor={-1}
+            value={formValue.cPhone}
+            onChange={(value) =>
+              setFormValue({
+                ...formValue,
+                cPhone: value.toString()
+              })
+            }
+            disabled
+            required
+          />
+          <View className="pr-1">
             <AtButton
               size="small"
               onClick={() => {
@@ -343,12 +350,12 @@ export default function Index() {
               更改
             </AtButton>
           </View>
-        </AtInput>
+        </View>
+
         <AtInput
           name="cEmail"
           title="邮箱"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cEmail}
           onChange={(value) =>
@@ -362,7 +369,6 @@ export default function Index() {
           name="cWetName"
           title="微信号"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cWetName}
           onChange={(value) =>
@@ -388,7 +394,6 @@ export default function Index() {
           name="cCompany"
           title="公司"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cCompany}
           onChange={(value) =>
@@ -403,7 +408,6 @@ export default function Index() {
           name="cDepartment"
           title="部门"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cDepartment}
           onChange={(value) =>
@@ -417,7 +421,6 @@ export default function Index() {
           name="cPost"
           title="职位"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cPost}
           onChange={(value) =>
@@ -431,7 +434,6 @@ export default function Index() {
           name="cUrl"
           title="企业官网"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cUrl}
           onChange={(value) =>
@@ -445,7 +447,6 @@ export default function Index() {
           name="cAddress"
           title="地址"
           type="text"
-          placeholder="请填写"
           cursor={-1}
           value={formValue.cAddress}
           onChange={(value) =>
@@ -468,7 +469,6 @@ export default function Index() {
           }
           maxLength={200}
           height={250}
-          placeholder="请输入"
         />
 
         <View className="bg-[#f5f5f5] p-2 text-sm text-gray-500">业务介绍</View>
@@ -540,7 +540,6 @@ export default function Index() {
               name="cPhone"
               title="手机号"
               type="text"
-              placeholder="请输入"
               cursor={-1}
               value={checkPhoneFormValue.cPhone}
               onChange={(value) =>
@@ -555,7 +554,6 @@ export default function Index() {
               name="cPhone"
               title="验证码"
               type="text"
-              placeholder="请输入"
               cursor={-1}
               value={checkPhoneFormValue.cCheckCode}
               onChange={(value) =>

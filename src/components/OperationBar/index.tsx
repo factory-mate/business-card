@@ -1,5 +1,5 @@
 import { Button, Image, Text, View } from '@tarojs/components'
-import { addPhoneContact, makePhoneCall } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import { AtModal, AtModalContent, AtModalHeader } from 'taro-ui'
 import LaAddressBook from '../../assets/share/LaAddressBook.png'
@@ -19,12 +19,12 @@ export default function OperationBar(props: OperationBarProps) {
 
   const [open, setOpen] = useState(false)
 
-  const handleMakePhoneCall = () => makePhoneCall({ phoneNumber: data.cPhone! })
+  const handleMakePhoneCall = () => Taro.makePhoneCall({ phoneNumber: data.cPhone! })
 
   const handleAddWechat = () => setOpen(true)
 
   const handleAddPhoneContact = () =>
-    addPhoneContact({
+    Taro.addPhoneContact({
       photoFilePath: '',
       firstName: data.cUserName ?? '',
       title: data.cPost,
@@ -32,7 +32,17 @@ export default function OperationBar(props: OperationBarProps) {
       email: data.cEmail,
       mobilePhoneNumber: data.cPhone,
       url: data.cUrl,
-      weChatNumber: data.cWetName
+      weChatNumber: data.cWetName,
+      success: () => {
+        Taro.showToast({ title: '保存成功', icon: 'success' })
+      },
+      fail: (err) => {
+        Taro.showModal({
+          title: '提示',
+          content: '请检查是否开启通讯录权限：' + err.errMsg,
+          showCancel: false
+        })
+      }
     })
 
   return (

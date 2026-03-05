@@ -73,7 +73,7 @@ export default function StarArea() {
     StarAPI.getForPage({
       PageSize: 1,
       PageIndex: 1,
-      Conditions: `cUserID = ${collectId} && cCollectId = ${userId}`,
+      Conditions: `cUserID = ${userId} && cCollectId = ${collectId}`,
       OrderByFileds: ''
     }).then((res) => {
       if (res.success && res.data?.data?.length) {

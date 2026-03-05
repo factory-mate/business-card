@@ -43,7 +43,7 @@ export default function Index() {
     StarAPI.getForPage({
       PageSize: 10,
       PageIndex: pageParam.current.pageIndex,
-      Conditions: `cCollectId = ${userId}`,
+      Conditions: `cUserId = ${userId}`,
       OrderByFileds: 'dCreateTime desc'
     })
       .then((res) => {
@@ -193,6 +193,22 @@ export default function Index() {
                         />
                       )
                     } else if (current === 1) {
+                      return (
+                        <AtListItem
+                          title={i.cViewName}
+                          note={i.cViewPost}
+                          extraText={i.dCreateTime}
+                          thumb={
+                            checkFileUrl(i.ViewPicInfo)
+                              ? getFileUrl(i.ViewPicInfo)
+                              : 'https://api.dicebear.com/9.x/initials/png?seed=用户'
+                          }
+                          onClick={() =>
+                            Taro.navigateTo({ url: `/pages/card/index?id=${i.cViewID}` })
+                          }
+                        />
+                      )
+                    } else if (current === 2) {
                       return (
                         <AtListItem
                           title={i.cUserName}
